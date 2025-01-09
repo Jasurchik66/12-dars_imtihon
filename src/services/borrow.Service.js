@@ -3,7 +3,7 @@ import Borrow from '../models/Borrow.js';
 
 export class BorrowService {
   static async borrowBook(userId, bookId) {
-    // Check book availability
+  
     const book = await Book.findById(bookId);
     if (!book) {
       throw new Error('Book not found');
@@ -13,11 +13,9 @@ export class BorrowService {
       throw new Error('No copies available');
     }
 
-    // Calculate return date (2 weeks)
     const returnDate = new Date();
     returnDate.setDate(returnDate.getDate() + 14);
 
-    // Create borrow record
     const borrow = new Borrow({
       user: userId,
       book: bookId,
@@ -26,7 +24,6 @@ export class BorrowService {
 
     await borrow.save();
 
-    // Update book copies
     book.copies -= 1;
     await book.save();
 
